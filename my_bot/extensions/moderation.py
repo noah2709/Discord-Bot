@@ -13,6 +13,10 @@ class ModCog(commands.Cog, name="Moderation"):
         self.bot = bot
 
     @commands.command()
+    @commands.command(
+        aliases=['clear'],
+        description='Clears the chat'
+    )
     async def cc(self, ctx, *, amount: int = None):
         if ctx.message.author.guild_permissions.manage_messages:
             try:
@@ -31,6 +35,11 @@ class ModCog(commands.Cog, name="Moderation"):
             await ctx.send("You do not have permissions to execute this command.")
 
     @commands.command()
+    @commands.command(
+        aliases=['k'],
+        description='kicks a user from the guild'
+    )
+    @commands.has_permissions(ban_members=True)
     async def kick(self, ctx, user: discord.Member, *, reason):
         if user.guild_permissions.manage_messages:
             await ctx.send("I can not kick this user because he is an admin/moderator.")
@@ -45,6 +54,11 @@ class ModCog(commands.Cog, name="Moderation"):
             await ctx.send("You do not have permissions do execute this command.")
 
     @commands.command()
+    @commands.command(
+        aliases=['b'],
+        description='bans a user from the guild'
+    )
+    @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, user: discord.Member, *, reason=None):
         if user.guild_permissions.manage_messages:
             await ctx.send("I can not ban this user because he is an admin/moderator.")
@@ -59,6 +73,10 @@ class ModCog(commands.Cog, name="Moderation"):
             await ctx.send("You do not have permissions do execute this command.")
 
     @commands.command()
+    @commands.command(
+        aliases=['ub'],
+        description='unbans a user from the guild'
+    )
     @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, *, member):
         banned_users = await ctx.guild.bans()
@@ -71,6 +89,10 @@ class ModCog(commands.Cog, name="Moderation"):
                 return
 
     @commands.command(aliases=["r"], description="Restarts the bot")
+    @commands.command(
+        aliases=["r"],
+        description="restart the bot"
+        )
     @is_owner()
     async def restart(self, ctx: Context) -> None:
         await ctx.message.add_reaction("✅")
