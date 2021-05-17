@@ -1,5 +1,6 @@
 import json
 from types import SimpleNamespace
+from typing import List
 
 
 
@@ -18,7 +19,10 @@ class Config(SimpleNamespace):
             self.token: str = config['token']
             self.api_key: str = config['api_key']
 
-            # self.status: str = config['status']
+            self.moderation_roles: List[int] = [
+                int(role_id)
+                for role_id in config['moderation_roles']
+            ]
             self.prefix: str = config['bot_prefix']
 
             self.welcome_channel: str = config['welcome_channel']
