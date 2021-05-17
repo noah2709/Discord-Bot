@@ -32,13 +32,12 @@ from typing import Optional
 import discord
 from pathlib import Path
 from os import listdir
-from itertools import cycle
 from logging import getLogger
 from config import Config
 import logs
 
 from discord import Guild
-from discord.ext import commands, tasks
+from discord.ext import commands
 from discord.ext.commands import Cog
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
 
@@ -98,12 +97,6 @@ class Bot(commands.Bot):
         gateway event before giving up and thus not populating the cache for unavailable guilds.
         """
         await self._guild_available.wait()
-
-status = cycle(["Developed by Taikador", "Type .help for help"])
-
-@tasks.loop(seconds=10)
-async def change_status():
-    await bot.change_presence(activity=discord.Game(next(status)))
 
 if __name__ == "__main__":
     config = Config()
