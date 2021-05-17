@@ -1,0 +1,1 @@
+python my_bot/main.py
