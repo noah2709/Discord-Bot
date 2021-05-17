@@ -5,6 +5,7 @@ from discord.ext.commands import Context
 import time
 from discord.ext.commands.core import is_owner
 from discord.ext.commands import Bot
+import os, platform
 
 log = getLogger('extensions.moderation')
 
@@ -12,7 +13,6 @@ class ModCog(commands.Cog, name="Moderation"):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    @commands.command()
     @commands.command(
         aliases=['clear'],
         description='Clears the chat'
@@ -34,7 +34,6 @@ class ModCog(commands.Cog, name="Moderation"):
         else:
             await ctx.send("You do not have permissions to execute this command.")
 
-    @commands.command()
     @commands.command(
         aliases=['k'],
         description='kicks a user from the guild'
@@ -53,7 +52,6 @@ class ModCog(commands.Cog, name="Moderation"):
         else:
             await ctx.send("You do not have permissions do execute this command.")
 
-    @commands.command()
     @commands.command(
         aliases=['b'],
         description='bans a user from the guild'
@@ -72,7 +70,6 @@ class ModCog(commands.Cog, name="Moderation"):
         else:
             await ctx.send("You do not have permissions do execute this command.")
 
-    @commands.command()
     @commands.command(
         aliases=['ub'],
         description='unbans a user from the guild'
@@ -88,15 +85,32 @@ class ModCog(commands.Cog, name="Moderation"):
                 await ctx.send(f"{user.mention} got unbanned")
                 return
 
-    @commands.command(aliases=["r"], description="Restarts the bot")
     @commands.command(
         aliases=["r"],
         description="restart the bot"
         )
     @is_owner()
-    async def restart(self, ctx: Context) -> None:
-        await ctx.message.add_reaction("✅")
-        exit(69)
+    async def restart(self, ctx):
+        if platform.system() == "Windows":
+            embed=discord.Embed(
+            title="Restarting...",
+            desc=""
+            )
+            await ctx.send(embed=embed)
+            os.system("cls")
+            os.system("powershell py -3 my_bot\main.py")
+            pass
+        elif platform.system() == "Linux":
+            embed=discord.Embed(
+            title="Restarting...",
+            desc=""
+            )
+            await ctx.send(embed=embed)
+            os.system("cls")
+            os.system("bash python my_bot/main.py")
+            pass
+
+        
 
 
 def setup(bot: Bot):
