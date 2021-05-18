@@ -5,9 +5,6 @@ import datetime
 from discord.ext.commands.bot import Bot
 from discord.member import Member
 
-hello_channel = int(696797593761611856)
-
-
 class WelcomeCog(commands.Cog, name="Welcome"):
     def __init__(self, bot: Bot):
         self.bot = bot
@@ -32,7 +29,7 @@ class WelcomeCog(commands.Cog, name="Welcome"):
             icon_url=member.guild.icon_url,
             )
         channel = member.guild.get_channel(
-            hello_channel
+            int(self.bot.config.welcome_channel)
             )
         await channel.send(
             embed=embed
