@@ -27,14 +27,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+import logs
 import asyncio
-from typing import Optional
 import discord
+from typing import Optional
 from pathlib import Path
 from os import listdir
 from logging import getLogger
 from config import Config
-import logs
+
 
 from discord import Guild
 from discord.ext import commands
