@@ -8,8 +8,8 @@ from discord.ext.commands import Bot
 
 log = getLogger('extensions.lol')
 
-class LolCog(commands.Cog, name="League"):
-    def __init__(self, bot: Bot):  #
+class LolInfoCog(commands.Cog, name="LeagueInfo"):
+    def __init__(self, bot: Bot):
         self.watcher = LolWatcher(bot.config.api_key)
         self.bot = bot
 
@@ -99,4 +99,4 @@ class LolCog(commands.Cog, name="League"):
 
 
 def setup(bot):
-    bot.add_cog(LolCog(bot))
+    bot.add_cog(LolInfoCog(bot))
