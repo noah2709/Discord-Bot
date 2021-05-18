@@ -19,7 +19,8 @@ First of all you need to create a config.json file in the my_bot folder.
    
    bot_prefix       = 'SET YOUR BOT PREFIX',
    
-   welcome_channel  = 'SET YOUR WELCOME CHANNEL ID'
+   welcome_channel  = 'SET YOUR WELCOME CHANNEL ID',
+   moderation_roles = ['ROLE ONE', 'ROLE TWO']
    ```
 
  ## TODO LIST
