@@ -24,7 +24,7 @@ First of all you need to create a config.json file in the my_bot folder.
 
  ## TODO LIST
 
-- [ ] Debug the restart command ( end the loop if restarted )
+- [x] Debug the restart command ( end the loop if restarted )
 - [ ] Add the free champion rotation to the bot
 - [ ] Rewrite the welcome.py ( Read the welcome channel directly from the config )
 - [ ] Let users register their lol Account to see information about theirselfes
