@@ -1,11 +1,11 @@
 import discord
+from discord.embeds import Embed
 from discord.ext import commands
 from logging import getLogger
-from discord.ext.commands import Context
 import time
 from discord.ext.commands.core import is_owner
 from discord.ext.commands import Bot
-import os, platform
+from discord.colour import Colour
 
 log = getLogger('extensions.moderation')
 
@@ -91,27 +91,18 @@ class ModCog(commands.Cog, name="Moderation"):
         )
     @is_owner()
     async def restart(self, ctx):
-        if platform.system() == "Windows":
-            embed=discord.Embed(
-            title="Restarting...",
-            desc=""
-            )
-            await ctx.send(embed=embed)
-            os.system("cls")
-            os.system("powershell py -3 my_bot\main.py")
-            pass
-        elif platform.system() == "Linux":
-            embed=discord.Embed(
-            title="Restarting...",
-            desc=""
-            )
-            await ctx.send(embed=embed)
-            os.system("cls")
-            os.system("bash python my_bot/main.py")
-            pass
-
-        
-
+        embed = Embed(
+            title= 'Restarting...',
+            colour=Colour.dark_red(),
+        )
+        embed.set_author(
+            name="SERVER"
+        )
+        embed.set_footer(
+            text=self.bot.signature
+        )
+        await ctx.send(embed=embed)
+        exit(104)
 
 def setup(bot: Bot):
     bot.add_cog(ModCog(bot))

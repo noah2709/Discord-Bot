@@ -30,5 +30,5 @@ class Config(SimpleNamespace):
             raise ConfigError(*error.args)
 
     def _get_config(self):
-        with open(".\\my_bot\\config.json") as file:
+        with open("./my_bot/config.json") as file:
             return json.load(file)
