@@ -78,7 +78,7 @@ class LolInfoCog(commands.Cog, name="LeagueInfo"):
                 embed.add_field(
                     name="Account Level", value="Level: " + str(lvl), inline=True
                 )
-                embed.set_footer(text="League of Legends | All Rights reserved")
+                embed.set_footer(text=self.bot.signature)
                 await ctx.send(embed=embed)
                 pass
         except HTTPError:

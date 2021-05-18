@@ -36,6 +36,9 @@ class HelpCog(commands.Cog, name="Help"):
             name= "League of Legends",
             value= "lolinfo",
         )
+        embed.set_footer(
+            text=self.bot.signature
+        )
 
         await ctx.send(embed=embed)
     
