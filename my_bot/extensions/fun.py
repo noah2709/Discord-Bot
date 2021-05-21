@@ -3,17 +3,20 @@ from discord.ext.commands import Bot
 from logging import getLogger
 import random
 
-log = getLogger('extensions.fun')
+log = getLogger("extensions.fun")
+
 
 class FunCog(commands.Cog, name="Fun"):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=["p"], description="Shows your latency")
     async def ping(self, ctx):
         await ctx.send(f"Pong! {round(self.bot.latency * 1000)}ms")
 
-    @commands.command()
+    @commands.command(
+        aliases=["MagicConchShell"], description="8 Ball game from SpongeBob"
+    )
     async def mcs(self, ctx, *, question):
         responses = [
             "Gar nichts.",
