@@ -96,6 +96,17 @@ optional = false
 python-versions = ">=3.4"
 
 [[package]]
+name = "leaguenames"
+version = "0.0.1"
+description = "A library that turns league of legends champion ids to champions names."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "multidict"
 version = "5.1.0"
 description = "multidict implementation"
@@ -138,6 +149,14 @@ requests = "*"
 dev = ["coverage", "pre-commit", "pytest", "pytest-cov", "tox"]
 
 [[package]]
+name = "tinydb"
+version = "4.4.0"
+description = "TinyDB is a tiny, document oriented database optimized for your happiness :)"
+category = "main"
+optional = false
+python-versions = ">=3.5,<4.0"
+
+[[package]]
 name = "typing-extensions"
 version = "3.10.0.0"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -160,7 +179,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "b684244381be1f5209ef4d62f5a302606302fe2e70f2904d379a8a753588ffb7"
+content-hash = "e1104b398efdaa8649e87c16331e236283f2f000ba25f38591ef0e21d4b7990d"
 
 [metadata.files]
 aiohttp = [
@@ -230,6 +249,9 @@ idna = [
     {file = "idna-3.1-py3-none-any.whl", hash = "sha256:5205d03e7bcbb919cc9c19885f9920d622ca52448306f2377daede5cf3faac16"},
     {file = "idna-3.1.tar.gz", hash = "sha256:c5b02147e01ea9920e6b0a3f1f7bb833612d507592c837a6c49552768f4054e1"},
 ]
+leaguenames = [
+    {file = "leaguenames-0.0.1-py3-none-any.whl", hash = "sha256:312cff9fc70571f309ad7425577bef8d8b5b06daa9c68c085ad0d1c589c3e7e3"},
+]
 multidict = [
     {file = "multidict-5.1.0-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:b7993704f1a4b204e71debe6095150d43b2ee6150fa4f44d6d966ec356a8d61f"},
     {file = "multidict-5.1.0-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:9dd6e9b1a913d096ac95d0399bd737e00f2af1e1594a787e00f7975778c8b2bf"},
@@ -281,6 +303,10 @@ requests = [
 riotwatcher = [
     {file = "riotwatcher-3.1.1-py3-none-any.whl", hash = "sha256:5b8cc87368e0ce1aeb9b6bd8ff923e6509051abf8bb53036d2d8828eee5a06bd"},
     {file = "riotwatcher-3.1.1.tar.gz", hash = "sha256:5542a7db74fcc714f22d2dcf8aa48c5323e51df3165521a9b9620a1c14ef5d9b"},
+]
+tinydb = [
+    {file = "tinydb-4.4.0-py3-none-any.whl", hash = "sha256:30b0f718ebb288e42d2f69f3e1b18928739f25153e6b5308a234e95c1673de71"},
+    {file = "tinydb-4.4.0.tar.gz", hash = "sha256:d57c29524ecacc081ebc24f96e0d787bba11dc20d52634a32a709b878be3545a"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},

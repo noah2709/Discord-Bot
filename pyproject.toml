@@ -10,6 +10,8 @@ python = "^3.9"
 "discord.py" = "^1.7.2"
 coloredlogs = "^15.0"
 riotwatcher = "^3.1.1"
+leaguenames = "^0.0.1"
+tinydb = "^4.4.0"
 
 [tool.poetry.dev-dependencies]
 

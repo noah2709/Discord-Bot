@@ -139,3 +139,4 @@ cython_debug/
 
 # Config
 my_bot/config.json
+db.json
