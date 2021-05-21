@@ -14,15 +14,15 @@ First of all you need to create a config.json file in the my_bot folder.
    ```
 4. Enter your variables in `config.js`
    ```JS
-   token            = 'ENTER YOUR DISCORD TOKEN',
-   api_key          = 'ENTER YOUR RIOT API KEY',
-   guild_id         = 'ENTER YOUR GUILD ID'
+   "token"            = 'ENTER YOUR DISCORD TOKEN',
+   "api_key"          = 'ENTER YOUR RIOT API KEY',
+   "guild_id"         = 'ENTER YOUR GUILD ID',
    
-   bot_prefix       = 'SET YOUR BOT PREFIX',
+   "bot_prefix"       = 'SET YOUR BOT PREFIX',
    
-   welcome_channel  = 'SET YOUR WELCOME CHANNEL ID',
-   rota_channel_id  = 'SET YOUR ROTA CHANNEL ID'
-   moderation_roles = ['ROLE ONE', 'ROLE TWO']
+   "welcome_channel"  = 'SET YOUR WELCOME CHANNEL ID',
+   "rota_channel_id"  = 'SET YOUR ROTA CHANNEL ID',
+   "moderation_roles" = ['ROLE ONE', 'ROLE TWO']
    ```
 5. Create a db.json file
 
