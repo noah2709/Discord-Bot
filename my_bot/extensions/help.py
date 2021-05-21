@@ -28,14 +28,17 @@ class HelpCog(commands.Cog, name="Help"):
         embed.add_field(
             name="Moderation",
             value="kick, ban, unban, clearchat",
+            inline=False,
         )
         embed.add_field(
             name="Misc",
             value="ping, MagicConch",
+            inline=False,
         )
         embed.add_field(
             name="League of Legends",
-            value="lolinfo",
+            value="LeagueInfo, LeagueLogin, LeagueLogout", 
+            inline=False,
         )
         embed.set_footer(text=self.bot.signature)
 
@@ -150,7 +153,7 @@ class HelpCog(commands.Cog, name="Help"):
     # LoL Section
 
     @help.command()
-    async def lolinfo(self, ctx):
+    async def LeagueInfo(self, ctx):
 
         embed = discord.Embed(
             title="League Info Command",
@@ -162,6 +165,40 @@ class HelpCog(commands.Cog, name="Help"):
             icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
         )
         embed.add_field(name="**Syntax**", value=".lolinfo <Summoner Name>")
+        embed.set_footer(text=self.bot.signature)
+
+        await ctx.send(embed=embed)
+    
+    @help.command()
+    async def LeagueLogin(self, ctx):
+
+        embed = discord.Embed(
+            title="League Login Command",
+            description="Saves your Summoner name so you can type .lolinfo <me> to find yourself",
+            colour=Color.dark_orange(),
+        )
+        embed.set_author(
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
+        )
+        embed.add_field(name="**Syntax**", value=".lollogin <Summoner Name>")
+        embed.set_footer(text=self.bot.signature)
+
+        await ctx.send(embed=embed)
+
+    @help.command()
+    async def LeagueLogout(self, ctx):
+
+        embed = discord.Embed(
+            title="League Logout Command",
+            description="Unsaves your Summoner name so you can register a new one",
+            colour=Color.dark_orange(),
+        )
+        embed.set_author(
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
+        )
+        embed.add_field(name="**Syntax**", value=".lollogout")
         embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
