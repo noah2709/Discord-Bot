@@ -7,7 +7,8 @@ from discord.colour import Color
 from logging import getLogger
 
 
-log = getLogger('extensions.help')
+log = getLogger("extensions.help")
+
 
 class HelpCog(commands.Cog, name="Help"):
     def __init__(self, bot: Bot):
@@ -29,40 +30,33 @@ class HelpCog(commands.Cog, name="Help"):
             value="kick, ban, unban, clearchat",
         )
         embed.add_field(
-            name= "Misc", 
+            name="Misc",
             value="ping, MagicConch",
         )
         embed.add_field(
-            name= "League of Legends",
-            value= "lolinfo",
+            name="League of Legends",
+            value="lolinfo",
         )
-        embed.set_footer(
-            text=self.bot.signature
-        )
+        embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
-    
+
     # Moderation Section
 
     @help.command()
     async def kick(self, ctx):
 
         embed = discord.Embed(
-            title= "Kick Command",
-            description= "Kicks a member from the Server",
+            title="Kick Command",
+            description="Kicks a member from the Server",
             colour=Color.dark_green(),
         )
         embed.set_author(
-            name= "HELPER",
-            icon_url= "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
         )
-        embed.add_field(
-            name= "**Syntax**",
-            value= ".kick <member> [reason]"
-        )
-        embed.set_footer(
-            text=self.bot.signature
-        )
+        embed.add_field(name="**Syntax**", value=".kick <member> [reason]")
+        embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
 
@@ -70,21 +64,16 @@ class HelpCog(commands.Cog, name="Help"):
     async def ban(self, ctx):
 
         embed = discord.Embed(
-            title= "Ban Command",
-            description= "Kicks a member from the Server",
+            title="Ban Command",
+            description="Kicks a member from the Server",
             colour=Color.dark_green(),
         )
         embed.set_author(
-            name= "HELPER",
-            icon_url= "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png"
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
         )
-        embed.add_field(
-            name= "**Syntax**",
-            value= ".ban <member> [reason]"
-        )
-        embed.set_footer(
-            text= self.bot.signature
-        )
+        embed.add_field(name="**Syntax**", value=".ban <member> [reason]")
+        embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
 
@@ -92,21 +81,16 @@ class HelpCog(commands.Cog, name="Help"):
     async def unban(self, ctx):
 
         embed = discord.Embed(
-            title= "Unban Command",
-            description= "Unbans a banned user",
+            title="Unban Command",
+            description="Unbans a banned user",
             colour=Color.dark_green(),
         )
         embed.set_author(
-            name= "HELPER",
-            icon_url= "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png"
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
         )
-        embed.add_field(
-            name= "**Syntax**",
-            value= ".unban <member>"
-        )
-        embed.set_footer(
-            text= self.bot.signature
-        )
+        embed.add_field(name="**Syntax**", value=".unban <member>")
+        embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
 
@@ -114,21 +98,16 @@ class HelpCog(commands.Cog, name="Help"):
     async def clearchat(self, ctx):
 
         embed = discord.Embed(
-            title= "Clear Chat Command",
-            description= "Clears the Chat",
+            title="Clear Chat Command",
+            description="Clears the Chat",
             colour=Color.dark_green(),
         )
         embed.set_author(
-            name= "HELPER",
-            icon_url= "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png"
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
         )
-        embed.add_field(
-            name= "**Syntax**",
-            value= ".cc [value]"
-        )
-        embed.set_footer(
-            text= self.bot.signature
-        )
+        embed.add_field(name="**Syntax**", value=".cc [value]")
+        embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
 
@@ -138,21 +117,16 @@ class HelpCog(commands.Cog, name="Help"):
     async def ping(self, ctx):
 
         embed = discord.Embed(
-            title= "Ping",
-            description= "Checks your latency to the bot",
+            title="Ping",
+            description="Checks your latency to the bot",
             colour=Color.dark_magenta(),
         )
         embed.set_author(
-            name= "HELPER",
-            icon_url= "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png"
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
         )
-        embed.add_field(
-            name= "**Syntax**",
-            value= ".ping"
-        )
-        embed.set_footer(
-            text= self.bot.signature
-        )
+        embed.add_field(name="**Syntax**", value=".ping")
+        embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
 
@@ -160,21 +134,16 @@ class HelpCog(commands.Cog, name="Help"):
     async def MagicConch(self, ctx):
 
         embed = discord.Embed(
-            title= "The Magic Conch",
-            description= "The Spongebob Magic Conch (8Ball)",
+            title="The Magic Conch",
+            description="The Spongebob Magic Conch (8Ball)",
             colour=Color.dark_magenta(),
         )
         embed.set_author(
-            name= "HELPER",
-            icon_url= "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png"
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
         )
-        embed.add_field(
-            name= "**Syntax**",
-            value= ".mcs [question]"
-        )
-        embed.set_footer(
-            text= self.bot.signature
-        )
+        embed.add_field(name="**Syntax**", value=".mcs [question]")
+        embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
 
@@ -184,24 +153,18 @@ class HelpCog(commands.Cog, name="Help"):
     async def lolinfo(self, ctx):
 
         embed = discord.Embed(
-            title= "League Info Command",
-            description= "Shows information about a Summoner",
+            title="League Info Command",
+            description="Shows information about a Summoner",
             colour=Color.dark_orange(),
         )
         embed.set_author(
-            name= "HELPER",
-            icon_url= "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png"
+            name="HELPER",
+            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png",
         )
-        embed.add_field(
-            name= "**Syntax**",
-            value= ".lolinfo <Summoner Name>"
-        )
-        embed.set_footer(
-            text= self.bot.signature
-        )
+        embed.add_field(name="**Syntax**", value=".lolinfo <Summoner Name>")
+        embed.set_footer(text=self.bot.signature)
 
         await ctx.send(embed=embed)
-
 
 
 def setup(bot: Bot):
