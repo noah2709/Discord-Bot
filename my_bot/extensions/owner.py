@@ -22,7 +22,10 @@ class OwnerCog(commands.Cog, name="Owner"):
             title="Restarting...",
             colour=Colour.dark_gold(),
         )
-        embed.set_author(name="SYSTEM")
+        embed.set_author(
+            name="SYSTEM",
+            icon_url=ctx.guild.icon_url
+            )
         embed.set_footer(text=self.bot.signature)
         await ctx.send(embed=embed)
         exit(104)
@@ -37,17 +40,17 @@ class OwnerCog(commands.Cog, name="Owner"):
             self.bot.reload_extension(f"extensions.{name}")
         except Exception as e:
             return await log.error(f"Couldn't reload Extension: {name}")
-        await ctx.send(embed=self._generate_reload_embed(name))
+        await ctx.send(embed=self._generate_reload_embed(ctx, name))
         log.info(f"Reloaded Extension: {name}")
 
-    def _generate_reload_embed(self, name):
+    def _generate_reload_embed(self, ctx, name): 
         embed = Embed(
             title=f"Extension: {name}, successfully reloaded",
             colour=Colour.dark_gold(),
         )
         embed.set_author(
             name="SYSTEM",
-            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Info_icon_002.svg/480px-Info_icon_002.svg.png"
+            icon_url=ctx.guild.icon_url
         )
         embed.set_footer(text=self.bot.signature)
         return embed
