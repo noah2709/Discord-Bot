@@ -3,10 +3,10 @@ from discord.ext.commands import Bot
 from logging import getLogger
 import random
 
-log = getLogger("extensions.fun")
+log = getLogger("extensions.misc")
 
 
-class FunCog(commands.Cog, name="Fun"):
+class MiscCog(commands.Cog, name="Misc"):
     def __init__(self, bot: Bot):
         self.bot = bot
 
@@ -32,4 +32,4 @@ class FunCog(commands.Cog, name="Fun"):
 
 
 def setup(bot):
-    bot.add_cog(FunCog(bot))
+    bot.add_cog(MiscCog(bot))
