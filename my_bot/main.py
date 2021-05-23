@@ -44,7 +44,7 @@ from discord.ext import commands
 from discord.ext.commands import Cog
 from discord.ext.commands.errors import CheckFailure, CommandNotFound
 
-log = getLogger("mybot")
+log = getLogger("SYSTEM")
 
 
 class Bot(commands.Bot):
