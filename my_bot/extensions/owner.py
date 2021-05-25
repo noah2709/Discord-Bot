@@ -31,6 +31,24 @@ class OwnerCog(commands.Cog, name="Owner"):
         exit(104)
 
     @commands.command(
+        aliases=["gp"], 
+        description="updates the bot"
+    )
+    @is_owner()
+    async def gitpull(self, ctx):
+        embed = Embed(
+            title="Getting Data... / Restarting...",
+            colour=Colour.dark_gold(),
+        )
+        embed.set_author(
+            name="SYSTEM",
+            icon_url=ctx.guild.icon_url
+            )
+        embed.set_footer(text=self.bot.signature)
+        await ctx.send(embed=embed)
+        exit(187)
+
+    @commands.command(
         aliases=["re"],
         description="reload one extension"
         )
