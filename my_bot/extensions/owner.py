@@ -46,7 +46,7 @@ class OwnerCog(commands.Cog, name="Owner"):
             )
         embed.set_footer(text=self.bot.signature)
         await ctx.send(embed=embed)
-        exit(187)
+        exit(108)
 
     @commands.command(
         aliases=["re"],

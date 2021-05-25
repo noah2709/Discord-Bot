@@ -1,9 +1,9 @@
 python my_bot/main.py
 
-while [ $? -eq 104 || $? -eq 187 ]; do
+while [ $? -eq 104 || $? -eq 108 ]; do
     if [$? -eq 104]; then
         python my_bot/main.py
-    elif [$? -eq 187]; then
+    elif [$? -eq 108]; then
         git pull
         python my_bot/main.py
     fi
