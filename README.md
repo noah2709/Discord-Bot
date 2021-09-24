@@ -35,4 +35,4 @@ First of all you need to create a config.json file in the my_bot folder.
 - [x] Add the new commands to the custom help command
 - [ ] Add "Live Game" to the bot ( To check the enemys while ingame ( In Progress... ))
 - [x] Rewrite the lolinfo command ( Get the code cleaner with more custom functions )
-- [ ] Fix new gitpull command ( Can't restart the bot anymore ( while loop isn't working ))
+- [x] Fix new gitpull command ( Can't restart the bot anymore ( while loop isn't working ))
