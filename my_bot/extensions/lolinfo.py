@@ -88,42 +88,96 @@ class LolInfoCog(commands.Cog, name="LeagueInfo"):
         return embed
 
     def _generate_summoner_found_ranked_embed(self, summoner, stats):
-        tier = stats[0]["tier"]
-        rank = stats[0]["rank"]
-        lp = stats[0]["leaguePoints"]
-        lvl = summoner["summonerLevel"]
-        icon = summoner["profileIconId"]
-        wins = int(stats[0]["wins"])
-        losses = int(stats[0]["losses"])
-        winrate = int((wins / (wins + losses)) * 100)
-        
-        embed = discord.Embed(
-            title=f"Summoner: " + summoner["name"],
-            description="Here you get all Information you'll need",
-            color=0x109319,
-        )
-        embed.set_author(
-            name="LOLINFO",
-            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
-        )
-        embed.set_thumbnail(
-            url="https://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/"
-            + str(icon)
-            + ".png"
-        )
-        embed.add_field(
-            name=f"Elo:", value=str(tier) + " " + str(rank), inline=False
-        )
-        embed.add_field(
-            name="More Information",
-            value=f"WR: " + str(winrate) + "% " + " LP: " + str(lp),
-            inline=True,
-        )
-        embed.add_field(
-            name="Account Level", value="Level: " + str(lvl), inline=True
-        )
-        embed.set_footer(text=self.bot.signature)
-        return embed
+        if len(stats) == 1:
+            tier = stats[0]["tier"]
+            rank = stats[0]["rank"]
+            lp = stats[0]["leaguePoints"]
+            lvl = summoner["summonerLevel"]
+            icon = summoner["profileIconId"]
+            wins = int(stats[0]["wins"])
+            losses = int(stats[0]["losses"])
+            winrate = int((wins / (wins + losses)) * 100)
+            
+            embed = discord.Embed(
+                title=f"Summoner: " + summoner["name"],
+                description="Here you get all Information you'll need",
+                color=0x109319,
+            )
+            embed.set_author(
+                name="LOLINFO",
+                icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
+            )
+            embed.set_thumbnail(
+                url="https://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/"
+                + str(icon)
+                + ".png"
+            )
+            embed.add_field(
+                name=f"SoloQ:", value=str(tier) + " " + str(rank), inline=False
+            )
+            embed.add_field(
+                name="More Information",
+                value=f"WR: " + str(winrate) + "% " + " LP: " + str(lp),
+                inline=True,
+            )
+            embed.add_field(
+                name="Account Level", value="Level: " + str(lvl), inline=True
+            )
+            embed.set_footer(text=self.bot.signature)
+            return embed
+        else:
+            # Flex
+            tierFlex = stats[0]["tier"]
+            rankFlex = stats[0]["rank"]
+            lpFlex = stats[0]["leaguePoints"]
+            lvl = summoner["summonerLevel"]
+            icon = summoner["profileIconId"]
+            winsFlex = int(stats[0]["wins"])
+            lossesFlex = int(stats[0]["losses"])
+            winrateFlex = int((winsFlex / (winsFlex + lossesFlex)) * 100)
+            # Solo
+            tierSolo = stats[1]["tier"]
+            rankSolo = stats[1]["rank"]
+            lpSolo   = stats[1]["leaguePoints"]
+            winsSolo = int(stats[1]["wins"])
+            lossesSolo = int(stats[1]["losses"])
+            winrateSolo = int((winsSolo / (winsSolo + lossesSolo)) * 100)
+            
+            embed = discord.Embed(
+                title=f"Summoner: " + summoner["name"],
+                description="Here you get all Information you'll need",
+                color=0x109319,
+            )
+            embed.set_author(
+                name="LOLINFO",
+                icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
+            )
+            embed.set_thumbnail(
+                url="https://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/"
+                + str(icon)
+                + ".png"
+            )
+            embed.add_field(
+                name="FlexQ:", value=str(tierFlex) + " " + str(rankFlex), inline=True
+            )
+            embed.add_field(
+                name="SoloQ", value=str(tierSolo) + " " + str(rankSolo), inline=False
+            )
+            embed.add_field(
+                name="Flex Stats",
+                value=f"WR: " + str(winrateFlex) + "% " + " LP: " + str(lpFlex),
+                inline=True,
+            )
+            embed.add_field(
+                name="Solo Stats",
+                value=f"WR: " + str(winrateSolo) + "% " + " LP: " + str(lpSolo),
+                inline=True,
+            )
+            embed.add_field(
+                name="Account Level", value="Level: " + str(lvl), inline=False
+            )
+            embed.set_footer(text=self.bot.signature)
+            return embed
 
     def _generate_error_embed(self, summoner_name):
         embed = discord.Embed(
