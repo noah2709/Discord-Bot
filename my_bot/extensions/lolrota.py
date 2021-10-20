@@ -26,9 +26,10 @@ class LolRotaCog(commands.Cog, name="LeagueRota"):
         freechampids = fetch["freeChampionIds"]
         # Check if the rota is new
         shown_rota = [elem["freeChampionIds"] for elem in self.shown_rota.all()]
-        if shown_rota[-1] == freechampids:
-            pass
-        else:
+        ListEmpty = False
+        # if shown_rota[-1] == freechampids:
+        #     pass
+        if not shown_rota:
             self.shown_rota.insert({"freeChampionIds": freechampids})
             # Get the Clearnames
             clearnames = []
@@ -52,6 +53,32 @@ class LolRotaCog(commands.Cog, name="LeagueRota"):
             embed.set_footer(text=self.bot.signature)
             channel = self.bot.get_channel(int(self.bot.config.rota_channel_id))
             await channel.send(embed=embed)
+        elif shown_rota[-1] != freechampids:
+            self.shown_rota.insert({"freeChampionIds": freechampids})
+            # Get the Clearnames
+            clearnames = []
+            for freechampid in freechampids:
+                clearname = leaguenames(freechampid)
+                clearnames.append(f"- {clearname}\n")
+            # Create the Embed
+            embed = discord.Embed(
+                title=f"Champion Rotation {self.today}",
+                description="Here you get the Champion rotation every week",
+                colour=discord.Colour.blurple(),
+            )
+            embed.set_author(
+                name="LOLROTA",
+                icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
+            )
+            embed.add_field(
+                name="Free Champions",
+                value="".join(clearnames),
+            )
+            embed.set_footer(text=self.bot.signature)
+            channel = self.bot.get_channel(int(self.bot.config.rota_channel_id))
+            await channel.send(embed=embed)
+        else:
+            pass
 
     @lolrota.before_loop
     async def before_lolrota(self):
