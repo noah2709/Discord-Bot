@@ -1,78 +1,224 @@
 import discord
+import traceback
+import requests
+import json, urllib.request
 from discord.ext import commands
-from logging import getLogger
-from requests.models import HTTPError
-from riotwatcher import LolWatcher
-from requests import HTTPError
 from discord.ext.commands import Bot
+from logging import getLogger
 from tinydb import where
 
-log = getLogger("extensions.lolinfo")
-
+log     = getLogger("extensions.Lolinfo")
+version = "11.21.1"
 
 class LolInfoCog(commands.Cog, name="LeagueInfo"):
     def __init__(self, bot: Bot):
-        self.watcher = LolWatcher(bot.config.api_key)
-        self.bot = bot
-        self.summoner = self.bot.db.table("summoner_names")
+        self.bot        = bot
+        self.database   = self.bot.db.table("summoner_names")
+        self.API        = bot.config.api_key
+        self.rankDict   = self.bot.rankDict
+        self.masteryDict= self.bot.masteryDict
 
     @commands.command(
-        aliases=["li"], 
+        aliases=["li"],
         description="Shows information about a Summoner"
     )
-    async def lolinfo(self, ctx, *, name):
-        if name == "me":
-            name = self._get_user_summoner(ctx.author.id)
+    async def lolinfo(self, ctx, *, summoner=None):
+        if summoner is None:
+            try:
+                summoner = self._get_user_summoner(ctx.author.id)
+            except Exception:
+                traceback.print_exc()
+        if summoner is not None:
+            try:
+                summoner_request = requests.get(f'https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{summoner}?api_key={self.API}')
+                summoner_request.raise_for_status()
+            except requests.HTTPError as exception:
+                traceback.print_exc()
+                await ctx.send(embed = self._generate_error_embed(summoner))
+                return
+            summoner_json   = summoner_request.json()
+            summoner_id     = summoner_json['id']
+            account_id      = summoner_json['accountId']
+            puuid           = summoner_json['puuid']
+            name            = summoner_json['name']
+            level           = summoner_json['summonerLevel']
+            icon_id         = summoner_json['profileIconId']
 
-        if name is None:
-            await ctx.send(embed=self._generate_not_registered_embed())
+            icon = f'http://ddragon.leagueoflegends.com/cdn/{version}/img/profileicon/{icon_id}.png'
+
+            temp_embed = discord.Embed(description=f"Fetching {summoner}'s profile, please be patient...", color= 0xfda5b0)
+            temp_embed.set_thumbnail(url= icon)
+            msg = await ctx.send(embed=temp_embed)
+        elif self._get_user_summoner(ctx.author.id) is None:
+            await ctx.send(embed = self._generate_not_registered_embed())
             return
+        else:
+            await ctx.send(embed = self._generate_error_embed(summoner))
 
         try:
-            summoner = self.watcher.summoner.by_name("euw1", name)
-            stats = self.watcher._league.by_summoner("euw1", summoner["id"])
-            if self._is_unranked(stats) == True:
-                await ctx.send(embed=self._generate_summoner_found_unranked_embed(summoner))
-            else:
-                await ctx.send(embed=self._generate_summoner_found_ranked_embed(summoner, stats))
-        except HTTPError:
-            await ctx.send(embed=self._generate_error_embed(name))
+            matchhistory_request = requests.get(f'https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=10&api_key={self.API}')
+        except Exception:
+            traceback.print_exc()
+        matchhistory_json = matchhistory_request.json()
+        matchhistory = matchhistory_json[0:10]
 
-    def _is_unranked(self, stats):
-        if len(stats) == 0:
-            return True
-        else:
-            return False
+        last_wins       = 0
+        last_losses     = 0
+        kills           = 0
+        deaths          = 0
+        assists         = 0
+        participant_id  = None
+
+        for m in matchhistory:
+            game_id     = m
+            try:
+                match_request = requests.get(f'https://europe.api.riotgames.com/lol/match/v5/matches/{game_id}?api_key={self.API}')
+            except Exception:
+                traceback.print_exc()
+            match_json = match_request.json()
+
+            for pid in match_json['info']['participants']:
+                try:
+                    if pid['summonerId'] == summoner_id:
+                        participant_id = pid['summonerId']
+                except:
+                    if pid['summonerId'] == account_id:
+                        participant_id = pid['summonerId']
+
+            for p in match_json['info']['participants']:
+                if p['summonerId'] == participant_id:
+                    kills += p['kills']
+                    deaths += p['deaths']
+                    assists += p['assists']
+                    if p['win'] == True:
+                        last_wins += 1
+                    else:
+                        last_losses += 1
+
+        last_win_percentage = int((int(last_wins) / (int(last_wins) + int(last_losses))) * 100)
+        average_kills       = kills / 10
+        average_deaths      = deaths / 10
+        average_assists     = assists / 10
+
+        try:
+            mastery_request = requests.get(f'https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}?api_key={self.API}')
+        except Exception:
+            traceback.print_exc()
+        mastery_json = mastery_request.json()
+
+        champion_id = []
+        champion_name = []
+        champion_level = []
+        champion_points = []
+
+        for mastery in mastery_json[0:3]:
+            champion_id.append(mastery['championId'])
+            champion_level.append(mastery['championLevel'])
+            champion_points.append(mastery['championPoints'])
+        for cid in champion_id:
+            with urllib.request.urlopen(f'http://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json') as f:
+                champion = json.loads(f.read().decode())
+            for k,v in champion['data'].items():
+                if v['key'] == str(cid):
+                    champion_name.append(v['name'])
+            f.close()
+        
+        try:
+            league_request = requests.get(f'https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/{summoner_id}?api_key={self.API}')
+        except Exception:
+            traceback.print_exc()
+        league_json = league_request.json()
+        solo_tier = ''
+        solo_rank = ''
+        full_solo_rank = ''
+        solo_wins = '0'
+        solo_losses = '0'
+        solo_lp = '0'
+        solo_win_ratio = '0'
+
+        flex_tier = ''
+        flex_rank = ''
+        full_flex_rank = ''
+        flex_wins = '0'
+        flex_losses = '0'
+        flex_lp = '0'
+        flex_win_ratio = '0'
+
+        solo_data = '**Unranked**'
+        flex_data = '**Unranked**'
+
+        for l in league_json:
+            if l['queueType'] == 'RANKED_SOLO_5x5':
+                solo_tier = l['tier']
+                solo_rank = l['rank']
+                solo_wins = l['wins']
+                solo_losses = l['losses']
+                solo_lp = l['leaguePoints']
+                full_solo_rank = solo_tier + ' ' + solo_rank
+                # with open('./data/ranks.json') as f:
+                #     ranks = json.load(f)
+                # f.close()
+                solo_icon = f'{self.rankDict[solo_tier]}'
+                solo_win_ratio = int((int(solo_wins) / (int(solo_wins) + int(solo_losses))) * 100)
+                solo_data = f'{solo_icon} **{full_solo_rank}** \n {solo_lp} LP / {solo_wins}W {solo_losses}L \n Win Ratio {solo_win_ratio}%'
+
+            if l['queueType'] == 'RANKED_FLEX_SR':
+                flex_tier = l['tier']
+                flex_rank = l['rank']
+                flex_wins = l['wins']
+                flex_losses = l['losses']
+                flex_lp = l['leaguePoints']
+                full_flex_rank = flex_tier + ' ' + flex_rank
+                # with open('./data/ranks.json') as f:
+                #     ranks = json.load(f)
+                # f.close()
+                flex_icon = f'{self.rankDict[flex_tier]}'
+                flex_win_ratio = int((int(flex_wins) / (int(flex_wins) + int(flex_losses))) * 100)
+                flex_data = f'{flex_icon} **{full_flex_rank}** \n {flex_lp} LP / {flex_wins}W {flex_losses}L \n Win Ratio {flex_win_ratio}%'
+
+        embed = discord.Embed(
+            title=f'Profile: {summoner}',
+            description=f"Summary of the ordered Profile: \n \u200B",
+            color=0xfda5b0
+        )
+        embed.set_thumbnail(url= icon)
+        embed.add_field(
+            name='Summoner Level', value=f'{level} \n \u200B'
+        )
+        embed.add_field(name='\u200B', value='\u200B')
+        embed.add_field(name='\u200B', value='\u200B')
+        embed.add_field(
+            name='Ranked (Solo/Duo)',
+            value=f'{solo_data} \n \u200B'
+        )
+        embed.add_field(name='\u200B', value='\u200B')
+        embed.add_field(
+            name='Ranked (Flex)',
+            value=f'{flex_data} \n \u200B'
+        )
+        embed.add_field(
+            name='Recent 10 Games', 
+            value=f'{average_kills} K / {average_deaths} D / {average_assists} A \n {last_wins}W {last_losses}L \n Win Ratio {last_win_percentage}% \n \u200B'
+        )
+        embed.add_field(name='\u200B', value='\u200B')
+        embed.add_field(
+            name='Highest Champion Mastery', 
+            value=f'''
+                        [{self.masteryDict[str(champion_level[0])]}] {champion_name[0]}: {champion_points[0]:,}
+                        [{self.masteryDict[str(champion_level[1])]}] {champion_name[1]}: {champion_points[1]:,}
+                        [{self.masteryDict[str(champion_level[2])]}] {champion_name[2]}: {champion_points[2]:,}
+                        \u200B'''
+        )
+        await msg.edit(embed=embed)
 
     def _get_user_summoner(self, user_id):
-        results = self.summoner.search(where("user") == user_id)
+        results = self.database.search(where("user") == user_id)
         if len(results) > 0:
             return results[0]["summoner"]
         else:
             return None
 
-    def _generate_summoner_found_unranked_embed(self, summoner):
-        lvl = summoner["summonerLevel"]
-        icon = summoner["profileIconId"]
-        
-        embed = discord.Embed(
-            title="Summoner: " + summoner["name"],
-            description="Here you get all Information you'll need",
-            colour=discord.Colour.blurple(),
-        )
-        embed.set_author(
-            name="LOLINFO",
-            icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
-        )
-        embed.set_thumbnail(
-            url="https://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/"
-            + str(icon)
-            + ".png"
-        )
-        embed.add_field(name="Elo:", value="UNRANKED", inline=False)
-        embed.add_field(name="Account Level", value="Level: " + str(lvl))
-        embed.set_footer(text=self.bot.signature)
-        return embed
+    # Error Embeds
 
     def _generate_not_registered_embed(self):
         embed = discord.Embed(
@@ -87,103 +233,15 @@ class LolInfoCog(commands.Cog, name="LeagueInfo"):
         embed.set_footer(text=self.bot.signature)
         return embed
 
-    def _generate_summoner_found_ranked_embed(self, summoner, stats):
-        if len(stats) == 1:
-            tier = stats[0]["tier"]
-            rank = stats[0]["rank"]
-            lp = stats[0]["leaguePoints"]
-            lvl = summoner["summonerLevel"]
-            icon = summoner["profileIconId"]
-            wins = int(stats[0]["wins"])
-            losses = int(stats[0]["losses"])
-            winrate = int((wins / (wins + losses)) * 100)
-            
-            embed = discord.Embed(
-                title=f"Summoner: " + summoner["name"],
-                description="Here you get all Information you'll need",
-                color=0x109319,
-            )
-            embed.set_author(
-                name="LOLINFO",
-                icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
-            )
-            embed.set_thumbnail(
-                url="https://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/"
-                + str(icon)
-                + ".png"
-            )
-            embed.add_field(
-                name=f"SoloQ:", value=str(tier) + " " + str(rank), inline=False
-            )
-            embed.add_field(
-                name="More Information",
-                value=f"WR: " + str(winrate) + "% " + " LP: " + str(lp),
-                inline=True,
-            )
-            embed.add_field(
-                name="Account Level", value="Level: " + str(lvl), inline=True
-            )
-            embed.set_footer(text=self.bot.signature)
-            return embed
-        else:
-            # Flex
-            tierFlex = stats[0]["tier"]
-            rankFlex = stats[0]["rank"]
-            lpFlex = stats[0]["leaguePoints"]
-            lvl = summoner["summonerLevel"]
-            icon = summoner["profileIconId"]
-            winsFlex = int(stats[0]["wins"])
-            lossesFlex = int(stats[0]["losses"])
-            winrateFlex = int((winsFlex / (winsFlex + lossesFlex)) * 100)
-            # Solo
-            tierSolo = stats[1]["tier"]
-            rankSolo = stats[1]["rank"]
-            lpSolo   = stats[1]["leaguePoints"]
-            winsSolo = int(stats[1]["wins"])
-            lossesSolo = int(stats[1]["losses"])
-            winrateSolo = int((winsSolo / (winsSolo + lossesSolo)) * 100)
-            
-            embed = discord.Embed(
-                title=f"Summoner: " + summoner["name"],
-                description="Here you get all Information you'll need",
-                color=0x109319,
-            )
-            embed.set_author(
-                name="LOLINFO",
-                icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
-            )
-            embed.set_thumbnail(
-                url="https://ddragon.leagueoflegends.com/cdn/9.3.1/img/profileicon/"
-                + str(icon)
-                + ".png"
-            )
-            embed.add_field(
-                name="FlexQ:", value=str(tierFlex) + " " + str(rankFlex), inline=True
-            )
-            embed.add_field(
-                name="SoloQ", value=str(tierSolo) + " " + str(rankSolo), inline=False
-            )
-            embed.add_field(
-                name="Flex Stats",
-                value=f"WR: " + str(winrateFlex) + "% " + " LP: " + str(lpFlex),
-                inline=True,
-            )
-            embed.add_field(
-                name="Solo Stats",
-                value=f"WR: " + str(winrateSolo) + "% " + " LP: " + str(lpSolo),
-                inline=True,
-            )
-            embed.add_field(
-                name="Account Level", value="Level: " + str(lvl), inline=False
-            )
-            embed.set_footer(text=self.bot.signature)
-            return embed
-
     def _generate_error_embed(self, summoner_name):
         embed = discord.Embed(
             title="Summoner: " + summoner_name + " could not be found!",
             description="Please check your input",
             color=0x102319,
+        )
+        embed.add_field(
+            name='Usage',
+            value='.lolinfo <Summoner>'
         )
         embed.set_author(
             name="LOLINFO",
