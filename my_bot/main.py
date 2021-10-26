@@ -53,14 +53,14 @@ class Bot(commands.Bot):
 
         logs.setup()
         self.config = config
-        self.db = TinyDB("db.json")
-        with open('champDict.json') as champ_file:
+        self.db = TinyDB("data/db.json")
+        with open('data/champDict.json') as champ_file:
             self.champDict = json.load(champ_file)
         
-        with open('rankDict.json') as rank_file:
+        with open('data/rankDict.json') as rank_file:
             self.rankDict = json.load(rank_file)
 
-        with open('masteryDict.json') as mastery_file:
+        with open('data/masteryDict.json') as mastery_file:
             self.masteryDict = json.load(mastery_file)
 
         self.extension_path: Path = Path(__file__).parent / "extensions"
