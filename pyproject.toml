@@ -12,6 +12,7 @@ coloredlogs = "^15.0"
 riotwatcher = "^3.1.1"
 leaguenames = "^0.0.1"
 tinydb = "^4.4.0"
+beautifulsoup4 = "^4.10.0"
 
 [tool.poetry.dev-dependencies]
 
