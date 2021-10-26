@@ -1,89 +1,78 @@
 import discord
 from discord.ext import commands, tasks
-from logging import getLogger
-from riotwatcher import LolWatcher
 from discord.ext.commands import Bot
+from logging import getLogger
+from bs4 import BeautifulSoup
+import requests
+from riotwatcher import LolWatcher
 from leaguenames import leaguenames
-from datetime import date
 
 log = getLogger("extensions.lolrota")
-
+URL = 'https://leagueoflegends.fandom.com/wiki/Free_champion_rotation#Classic'
 
 class LolRotaCog(commands.Cog, name="LeagueRota"):
     def __init__(self, bot: Bot):
         self.bot = bot
+        self.champDict = self.bot.champDict
         self.shown_rota = self.bot.db.table("shown_rota")
-
-        self.today = date.today().strftime("%d.%m.%Y")
 
         self.watcher = LolWatcher(bot.config.api_key)
         self.lolrota.start()
 
-    @tasks.loop(minutes=30)
+    @tasks.loop(hours=4)
     async def lolrota(self):
-        # Get the rota
+        result          = requests.get(URL)
+        soup            = BeautifulSoup(result.content, 'html.parser')
+        durationString  = soup.find('div', attrs={'id':'rotationweek'}).text
+
         fetch = self.watcher.champion.rotations("euw1")
         freechampids = fetch["freeChampionIds"]
-        # Check if the rota is new
+
         shown_rota = [elem["freeChampionIds"] for elem in self.shown_rota.all()]
-        ListEmpty = False
-        # if shown_rota[-1] == freechampids:
-        #     pass
+
+        channel = self.bot.get_channel(int(self.bot.config.rota_channel_id))
+
         if not shown_rota:
-            self.shown_rota.insert({"freeChampionIds": freechampids})
-            # Get the Clearnames
-            clearnames = []
-            for freechampid in freechampids:
-                clearname = leaguenames(freechampid)
-                clearnames.append(f"- {clearname}\n")
-            # Create the Embed
-            embed = discord.Embed(
-                title=f"Champion Rotation {self.today}",
-                description="Here you get the Champion rotation every week",
-                colour=discord.Colour.blurple(),
-            )
-            embed.set_author(
-                name="LOLROTA",
-                icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
-            )
-            embed.add_field(
-                name="Free Champions",
-                value="".join(clearnames),
-            )
-            embed.set_footer(text=self.bot.signature)
-            channel = self.bot.get_channel(int(self.bot.config.rota_channel_id))
-            await channel.send(embed=embed)
+            await channel.send(embed=self._generate_rota_embed(durationString, freechampids))
         elif shown_rota[-1] != freechampids:
-            self.shown_rota.insert({"freeChampionIds": freechampids})
-            # Get the Clearnames
-            clearnames = []
-            for freechampid in freechampids:
-                clearname = leaguenames(freechampid)
-                clearnames.append(f"- {clearname}\n")
-            # Create the Embed
-            embed = discord.Embed(
-                title=f"Champion Rotation {self.today}",
-                description="Here you get the Champion rotation every week",
-                colour=discord.Colour.blurple(),
-            )
-            embed.set_author(
-                name="LOLROTA",
-                icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png",
-            )
-            embed.add_field(
-                name="Free Champions",
-                value="".join(clearnames),
-            )
-            embed.set_footer(text=self.bot.signature)
-            channel = self.bot.get_channel(int(self.bot.config.rota_channel_id))
-            await channel.send(embed=embed)
+            await channel.send(embed=self._generate_rota_embed(durationString, freechampids))
         else:
             pass
+
+    def _generate_rota_embed(self, durationString, freechampids):
+        self.shown_rota.insert({"freeChampionIds": freechampids})
+        clearnames = []
+        championString = ''
+        for freechampid in freechampids:
+            clearname = leaguenames(freechampid)
+            clearnames.append(clearname)
+        for champ in clearnames:
+            championString += f'{self.champDict[champ]} **{champ}**\n'
+
+        durationString = f'`{durationString}`'
+
+        embed = discord.Embed(
+            title='Current Free Champion Rotation',
+            color=0x109319
+        )
+        embed.set_thumbnail(
+            url='https://static.wikia.nocookie.net/leagueoflegends/images/e/e6/Site-logo.png/revision/latest?cb=20210601132313'
+        )
+        embed.add_field(
+            name='Duration',
+            value=durationString,
+            inline=False
+        )
+        embed.add_field(
+            name='Champions',
+            value=championString,
+            inline=False
+        )
+        return embed
 
     @lolrota.before_loop
     async def before_lolrota(self):
         await self.bot.wait_until_ready()
-
 
 def setup(bot):
     bot.add_cog(LolRotaCog(bot))
