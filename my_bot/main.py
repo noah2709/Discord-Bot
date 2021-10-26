@@ -31,6 +31,7 @@ from discord.channel import TextChannel
 import logs
 import asyncio
 import discord
+import json
 from typing import Optional
 from pathlib import Path
 from os import listdir
@@ -46,7 +47,6 @@ from discord.ext.commands.errors import CheckFailure, CommandNotFound
 
 log = getLogger("SYSTEM")
 
-
 class Bot(commands.Bot):
     def __init__(self, config: Config, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -54,6 +54,14 @@ class Bot(commands.Bot):
         logs.setup()
         self.config = config
         self.db = TinyDB("db.json")
+        with open('champDict.json') as champ_file:
+            self.champDict = json.load(champ_file)
+        
+        with open('rankDict.json') as rank_file:
+            self.rankDict = json.load(rank_file)
+
+        with open('masteryDict.json') as mastery_file:
+            self.masteryDict = json.load(mastery_file)
 
         self.extension_path: Path = Path(__file__).parent / "extensions"
 
