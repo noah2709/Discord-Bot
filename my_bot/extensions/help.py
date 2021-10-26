@@ -174,7 +174,7 @@ class HelpCog(commands.Cog, name="Help"):
 
         embed = discord.Embed(
             title="League Login Command",
-            description="Saves your Summoner name so you can type .lolinfo <me> to find yourself",
+            description="Saves your Summoner name so you can type .lolinfo (without Summoner) to find yourself",
             colour=Color.dark_orange(),
         )
         embed.set_author(
