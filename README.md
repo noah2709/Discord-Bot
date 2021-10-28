@@ -37,4 +37,5 @@ First of all you need to create a config.json file in the my_bot folder.
 - [x] Add the new commands to the custom help command
 - [x] Rewrite the lolinfo command ( Get the code cleaner with more custom functions )
 - [x] Fix new gitpull command ( Can't restart the bot anymore ( while loop isn't working ))
+- [x] Add Patchnotes
 - [ ] Add multiple Team Search
