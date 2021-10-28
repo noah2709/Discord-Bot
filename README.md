@@ -12,7 +12,7 @@ First of all you need to create a config.json file in the my_bot folder.
    ```sh
    git clone https://github.com/Taikador/Taikador-Bot
    ```
-4. Enter your variables in `config.js`
+4. Enter your variables in `config.js` you have to create that file in [my_bot]
    ```JS
    "token"            = 'ENTER YOUR DISCORD TOKEN',
    "api_key"          = 'ENTER YOUR RIOT API KEY',
@@ -24,7 +24,7 @@ First of all you need to create a config.json file in the my_bot folder.
    "rota_channel_id"  = 'SET YOUR ROTA CHANNEL ID',
    "moderation_roles" = ['ROLE ONE', 'ROLE TWO']
    ```
-5. Create a db.json file
+5. Create a db.json file (in [data]
 
  ## TODO LIST
 
