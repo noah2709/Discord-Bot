@@ -24,7 +24,7 @@ First of all you need to create a config.json file in the my_bot folder.
    "rota_channel_id"  = 'SET YOUR ROTA CHANNEL ID',
    "moderation_roles" = ['ROLE ONE', 'ROLE TWO']
    ```
-5. Create a db.json file (in [data]
+5. Create a `db.json` file (in [data])
 
  ## TODO LIST
 
