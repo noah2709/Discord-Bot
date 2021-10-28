@@ -22,7 +22,9 @@ First of all you need to create a config.json file in the my_bot folder.
    
    "welcome_channel"  = 'SET YOUR WELCOME CHANNEL ID',
    "rota_channel_id"  = 'SET YOUR ROTA CHANNEL ID',
+   "patch_notes_channel_id" = 'SET YOUR PATCHNOTE CHANNEL ID'
    "moderation_roles" = ['ROLE ONE', 'ROLE TWO']
+   "guild_id": 'ENTER YOUR SERVER ID'
    ```
 5. Create a `db.json` file (in [data])
 
