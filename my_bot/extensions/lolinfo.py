@@ -8,7 +8,6 @@ from logging import getLogger
 from tinydb import where
 
 log     = getLogger("extensions.Lolinfo")
-version = "11.21.1"
 
 class LolInfoCog(commands.Cog, name="LeagueInfo"):
     def __init__(self, bot: Bot):
@@ -23,6 +22,9 @@ class LolInfoCog(commands.Cog, name="LeagueInfo"):
         description="Shows information about a Summoner"
     )
     async def lolinfo(self, ctx, *, summoner=None):
+        version_request = requests.get("https://ddragon.leagueoflegends.com/api/versions.json")
+        version_json = version_request.json()
+        version = version_json[0]
         if summoner is None:
             try:
                 summoner = self._get_user_summoner(ctx.author.id)
