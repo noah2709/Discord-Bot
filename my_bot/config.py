@@ -25,6 +25,7 @@ class Config(SimpleNamespace):
             self.prefix: str = config["bot_prefix"]
 
             self.rota_channel_id: str = config["rota_channel_id"]
+            self.patch_notes_channel_id: str = config['patch_notes_channel_id']
             self.welcome_channel_id: str = config["welcome_channel_id"]
         except KeyError as error:
             raise ConfigError(*error.args)
