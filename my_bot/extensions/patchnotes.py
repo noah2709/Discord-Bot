@@ -23,7 +23,11 @@ class PatchnotesCog(commands.Cog, name="Patchnotes"):
 
         channel = self.bot.get_channel(int(self.bot.config.patch_notes_channel_id))
 
-        if not self.shown_patch or patch in self.shown_patch:
+        shown_patch = [elem["Patch"] for elem in self.shown_patch.all()]
+
+        if not shown_patch:
+            await channel.send(embed=self._generate_patch_post(patch))
+        if shown_patch[-1] != patch:
             await channel.send(embed=self._generate_patch_post(patch))
         else:
             pass
