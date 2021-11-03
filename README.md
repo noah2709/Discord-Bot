@@ -12,7 +12,7 @@ First of all you need to create a config.json file in the my_bot folder.
    ```sh
    git clone https://github.com/Taikador/Taikador-Bot
    ```
-4. Enter your variables in `config.js`
+4. Enter your variables in `config.js` you have to create that file in [my_bot]
    ```JS
    "token"            = 'ENTER YOUR DISCORD TOKEN',
    "api_key"          = 'ENTER YOUR RIOT API KEY',
@@ -22,9 +22,11 @@ First of all you need to create a config.json file in the my_bot folder.
    
    "welcome_channel"  = 'SET YOUR WELCOME CHANNEL ID',
    "rota_channel_id"  = 'SET YOUR ROTA CHANNEL ID',
+   "patch_notes_channel_id" = 'SET YOUR PATCHNOTE CHANNEL ID'
    "moderation_roles" = ['ROLE ONE', 'ROLE TWO']
+   "guild_id": 'ENTER YOUR SERVER ID'
    ```
-5. Create a db.json file
+5. Create a `db.json` file (in [data])
 
  ## TODO LIST
 
@@ -35,4 +37,5 @@ First of all you need to create a config.json file in the my_bot folder.
 - [x] Add the new commands to the custom help command
 - [x] Rewrite the lolinfo command ( Get the code cleaner with more custom functions )
 - [x] Fix new gitpull command ( Can't restart the bot anymore ( while loop isn't working ))
+- [x] Add Patchnotes
 - [ ] Add multiple Team Search
