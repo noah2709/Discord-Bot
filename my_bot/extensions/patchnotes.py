@@ -27,7 +27,7 @@ class PatchnotesCog(commands.Cog, name="Patchnotes"):
 
         if not shown_patch:
             await channel.send(embed=self._generate_patch_post(patch))
-        if shown_patch[-1] != patch:
+        elif shown_patch[-1] != patch:
             await channel.send(embed=self._generate_patch_post(patch))
         else:
             pass
