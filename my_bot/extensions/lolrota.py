@@ -2,10 +2,10 @@ import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot
 from logging import getLogger
-from bs4 import BeautifulSoup
-import requests
 from riotwatcher import LolWatcher
 from leaguenames import leaguenames
+import datetime
+from datetime import date
 
 log = getLogger("extensions.lolrota")
 URL = 'https://leagueoflegends.fandom.com/wiki/Free_champion_rotation#Classic'
@@ -21,9 +21,11 @@ class LolRotaCog(commands.Cog, name="LeagueRota"):
 
     @tasks.loop(hours=4)
     async def lolrota(self):
-        result          = requests.get(URL)
-        soup            = BeautifulSoup(result.content, 'html.parser')
-        durationString  = soup.find('div', attrs={'id':'rotationweek'}).text
+        from_now    = date.today().strftime("%d %B, %Y")
+        until_temp  = datetime.datetime.now() + datetime.timedelta(days=7)
+        until       = until_temp.strftime("%d %B, %Y")
+
+        durationString = f"{from_now} - {until}"
 
         fetch = self.watcher.champion.rotations("euw1")
         freechampids = fetch["freeChampionIds"]
@@ -56,7 +58,7 @@ class LolRotaCog(commands.Cog, name="LeagueRota"):
             color=0x109319
         )
         embed.set_thumbnail(
-            url='https://static.wikia.nocookie.net/leagueoflegends/images/e/e6/Site-logo.png/revision/latest?cb=20210601132313'
+            url='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png'
         )
         embed.add_field(
             name='Duration',
