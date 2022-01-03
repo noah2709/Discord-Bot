@@ -5,7 +5,7 @@ from discord.ext.commands.bot import Bot
 import discord
 
 log = getLogger("extensions.Cycle")
-status = cycle(['"Type .help for help"', "Developed by Taikador"])
+status = cycle(['"Type .help for help"', "Developed by Vorleth"])
 
 
 class CycleCog(commands.Cog, name="Cycle"):
