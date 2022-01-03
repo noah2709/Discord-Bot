@@ -44,33 +44,63 @@ class LolRotaCog(commands.Cog, name="LeagueRota"):
     def _generate_rota_embed(self, durationString, freechampids):
         self.shown_rota.insert({"freeChampionIds": freechampids})
         clearnames = []
-        championString = ''
+        championString1 = ''
+        championString2 = ''
         for freechampid in freechampids:
             clearname = leaguenames(freechampid)
             clearnames.append(clearname)
+        
         for champ in clearnames:
-            championString += f'{self.champDict[champ]} **{champ}**\n'
+            if len(championString1) <= 1000:
+                championString1 += f'{self.champDict[champ]} **{champ}**\n'
+            else:
+                championString2 += f'{self.champDict[champ]} **{champ}**\n'
+    
 
         durationString = f'`{durationString}`'
 
-        embed = discord.Embed(
+        embed1 = discord.Embed(
             title='Current Free Champion Rotation',
             color=0x109319
         )
-        embed.set_thumbnail(
+        embed1.set_thumbnail(
             url='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png'
         )
-        embed.add_field(
+        embed1.add_field(
             name='Duration',
             value=durationString,
             inline=False
         )
-        embed.add_field(
+        embed1.add_field(
             name='Champions',
-            value=championString,
+            value=championString1,
             inline=False
         )
-        return embed
+
+        if len(championString2) != 0:
+
+            embed2 = discord.Embed(
+                title='Current Free Champion Rotation',
+                color=0x109319
+            )
+            embed2.set_thumbnail(
+                url='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/256px-LoL_icon.svg.png'
+            )
+            embed2.add_field(
+                name='Duration',
+                value=durationString,
+                inline=False
+            )
+            embed2.add_field(
+                name='Champions',
+                value=championString2,
+                inline=False
+            )
+            return embed1, embed2
+        
+        else:
+            return embed1
+
 
     @lolrota.before_loop
     async def before_lolrota(self):
