@@ -72,7 +72,7 @@ class Bot(commands.Bot):
         self.welcome_channel_available = asyncio.Event()
         self.welcome_channel: Optional[TextChannel] = None
 
-        self.signature = "Bot created by: Taikador"
+        self.signature = "Bot created by: Vorleth"
 
         self.load_extensions()
 
