@@ -42,7 +42,6 @@ class LolRotaCog(commands.Cog, name="LeagueRota"):
             pass
 
     def _generate_rota_embed(self, durationString, freechampids):
-        self.shown_rota.insert({"freeChampionIds": freechampids})
         clearnames = []
         championString1 = ''
         championString2 = ''
@@ -55,6 +54,7 @@ class LolRotaCog(commands.Cog, name="LeagueRota"):
                 championString1 += f'{self.champDict[champ]} **{champ}**\n'
             else:
                 championString2 += f'{self.champDict[champ]} **{champ}**\n'
+        self.shown_rota.insert({"freeChampionIds": freechampids})
     
 
         durationString = f'`{durationString}`'
