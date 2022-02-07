@@ -7,7 +7,8 @@ while [ $EXIT_CODE -eq 104 ] || [ $EXIT_CODE -eq 108 ]; do
         python my_bot/main.py
         EXIT_CODE=$?
     elif [ $EXIT_CODE -eq 108 ]; then
-        git pull
+        git stash -k
+        git pull --force
         python my_bot/main.py
         EXIT_CODE=$?
     fi
